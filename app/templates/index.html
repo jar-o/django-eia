@@ -1,0 +1,102 @@
+<!-- <html> -->
+<!-- <head> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script> -->
+<!-- <title></title> -->
+<!-- </head> -->
+<!-- <body> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Your page title here :)</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="/static/css/normalize.css">
+  <link rel="stylesheet" href="/static/css/skeleton.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div class="eleven columns" style="margin-top: 5%">
+        <h4>Energywut</h4>
+
+        <p>We generate electricity in the U.S. from many different fuel
+        sources. Ever wonder what shape those sources take when compared?
+        Measured in gigawatts, the chart below shows which fuels we rely on the
+        most.</p>
+
+        <p style="font-size:small"><em>Click or unclick years below to make specific comparisons.</em></p>
+      </div>
+    </div>
+  </div>
+
+   <div align="center"><canvas id="myChart"></canvas></div>
+
+
+   <div class="container">
+       <div class="row">
+           <div class="eleven columns" style="margin-top: 5%">
+               <p style="font-size:small;text-align:center">Source: <a
+                   href="http://www.eia.gov/">U.S. Energy Information Administration</a>. Site &copy; 2017 James Robson
+           </div>
+       </div>
+   </div>
+
+<script>
+var ctx = document.getElementById("myChart");
+var colors = [
+    'rgba(222, 207, 63, 0.4)',
+    'rgba(241, 88, 84, 0.4)',
+    'rgba(93, 165, 218, 0.4)',
+    'rgba(250, 164, 58, 0.4)',
+    'rgba(96, 189, 104, 0.4)',
+    'rgba(241, 124, 176, 0.4)',
+    'rgba(178, 145, 47, 0.4)',
+    'rgba(178, 118, 178, 0.4)',
+    'rgba(77, 77, 77, 0.4)',
+];
+var ci = 0; // Used to sneakily select colors from above array for each iteration
+
+var myChart = new Chart(ctx, {
+  type: 'radar',
+  data: {
+    labels: ["Coal", "Hydro-electric", "Nuclear", "Natural Gas", "Solar", "Wind", "Geothermal"],
+    datasets: [
+    {% for key, value in data %}
+    {
+        label: '{{key}}',
+        backgroundColor: colors[ci],
+        borderColor: colors[ci++],
+        data:  [{{value.coal|default:0}}, {{value.conventional_hydro|default:0}}, {{value.nuclear|default:0}}, {{value.natural_gas|default:0}}, {{value.solar|default:0}}, {{value.wind|default:0}}, {{value.geothermal|default:0}}]
+    },
+    {% endfor %}
+    ]
+  }
+});
+</script>
+</body>
+</html>
