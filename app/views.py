@@ -12,7 +12,11 @@ def index(request):
 
 # API
 def annual(request):
-    data = lib.annual()
+    if settings.API_KEY == request.META['HTTP_AUTHORIZATION']:
+        data = lib.annual()
+    else:
+        data = '{"error":"bad_auth"}'
+
     resp = HttpResponse(data, content_type='application/json')
     resp['Content-Length'] = len(data)
     return resp
