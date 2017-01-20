@@ -43,7 +43,6 @@ def nuclear():
 def annual():
     ret = {}
     rkey = 'api-annual'
-    r.delete(rkey) #TODO
     if not r.get(rkey):
         # As you add "fetch" functions above, be sure to update this list to
         # include them in the output.
