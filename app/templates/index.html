@@ -86,14 +86,14 @@ var ci = 0; // Used to sneakily select colors from above array for each iteratio
 var myChart = new Chart(ctx, {
   type: 'radar',
   data: {
-    labels: ["Coal", "Hydro-electric", "Nuclear", "Natural Gas", "Solar", "Wind", "Geothermal"],
+    labels: ["Hydro-electric", "Coal", "Nuclear", "Natural Gas", "Solar", "Wind", "Geothermal"],
     datasets: [
     {% for key, value in data %}
     {
         label: '{{key}}',
         backgroundColor: colors[ci],
         borderColor: colors[ci++],
-        data:  [{{value.coal|default:0}}, {{value.conventional_hydro|default:0}}, {{value.nuclear|default:0}}, {{value.natural_gas|default:0}}, {{value.solar|default:0}}, {{value.wind|default:0}}, {{value.geothermal|default:0}}]
+        data:  [{{value.conventional_hydro|default:0}}, {{value.coal|default:0}}, {{value.nuclear|default:0}}, {{value.natural_gas|default:0}}, {{value.solar|default:0}}, {{value.wind|default:0}}, {{value.geothermal|default:0}}]
     },
     {% endfor %}
     ]
