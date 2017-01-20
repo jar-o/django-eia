@@ -1,6 +1,6 @@
 # Energywut
 
-This is live at [energywut.us](energywut.us).
+This is live at [http://energywut.us](energywut.us).
 
 This is a demo Django project that takes advantage of the [Open Government Initiative](https://www.whitehouse.gov/open) to show a clear picture of the fuel sources we rely on for generating energy. And if you're reading this, you're consuming some of that energy. `:)`
 
