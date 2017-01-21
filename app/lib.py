@@ -15,7 +15,6 @@ def _req(series_id):
     try:
         conn.request('GET', eia_gov_prefix + series_id)
     except gaierror:
-        print 'whut'
         return "{}"
 
     resp = conn.getresponse()
