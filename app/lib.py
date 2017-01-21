@@ -2,6 +2,7 @@ from django.conf import settings
 import httplib
 import redis
 import json
+from socket import gethostbyname, gaierror
 
 eia_gov_srv = 'api.eia.gov'
 eia_gov_prefix = '/series/?api_key=' + settings.EIA_GOV_API_KEY + '&series_id='
@@ -9,15 +10,26 @@ eia_gov_prefix = '/series/?api_key=' + settings.EIA_GOV_API_KEY + '&series_id='
 r = redis.StrictRedis(host=settings.REDIS_SRV, port=settings.REDIS_PORT, db=0, password=settings.REDIS_PASSWORD)
 
 def _req(series_id):
-    #TODO error conditions yo
     conn = httplib.HTTPConnection(eia_gov_srv)
-    conn.request('GET', eia_gov_prefix + series_id)
-    return conn.getresponse().read()
+
+    try:
+        conn.request('GET', eia_gov_prefix + series_id)
+    except gaierror:
+        print 'whut'
+        return "{}"
+
+    resp = conn.getresponse()
+    if resp.status == 200:
+        return resp.read()
+    else:
+        return "{}"
 
 def _fetch_cache(rkey, series_id):
-    if not r.get(rkey):
+    ret = r.get(rkey)
+    if not ret:
         r.set(rkey, _req(series_id), settings.REDIS_DEFAULT_CACHE_TIME)
-    return json.loads(r.get(rkey))
+        ret = r.get(rkey)
+    return json.loads(ret)
 
 def coal():
     return _fetch_cache('eia-coal-US-net-generation-response', 'ELEC.GEN.COW-US-98.A')
@@ -50,6 +62,8 @@ def annual():
         for i in range(0, len(funcs)):
             # Introspection here to call appropriate func based on above list
             c = globals()[funcs[i]]()
+
+            if 'series' not in c: continue
 
             for s in c['series'][0]['data']:
                 if s[0] not in ret:
